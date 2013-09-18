@@ -1,0 +1,7 @@
+mailForm:
+  caption:
+    ja_JP: "登録メール入力フォーム"
+  description:
+    ja_JP: "登録メール入力フォーム"
+  viewable_privilege: 4
+  component: [r, mailBox]
