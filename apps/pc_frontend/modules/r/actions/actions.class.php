@@ -14,8 +14,9 @@ class rActions extends sfActions
   *
   * @param sfWebRequest $request A request object
   */
-  public function executeIndex(sfWebRequest $request)
+  public function executeMailclick(sfWebRequest $request)
   {
-    $this->forward('default', 'module');
+    $this->register_token = $request['token'];
+    
   }
 }
