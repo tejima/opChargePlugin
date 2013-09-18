@@ -1,0 +1,2 @@
+all:
+  opchargeplugin_webpaysecret: SECRET_SECRET
