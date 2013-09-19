@@ -16,7 +16,16 @@ class rActions extends sfActions
   */
   public function executeMailclick(sfWebRequest $request)
   {
-    $this->register_token = $request['token'];
-    
+    if (!isset($request['token']))
+    {
+      $this->message = "token not specified.";
+      return sfView::ERROR;
+    }
+    $member = Doctrine::getTable("Member")->findByRegisterToken($request["token"]);
+    if(!$member){
+      $this->message = "invalid token.";
+      return sfView::ERROR;
+    }
+    $this->token = $request["token"];
   }
 }

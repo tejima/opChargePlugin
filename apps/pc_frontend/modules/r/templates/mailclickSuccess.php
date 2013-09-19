@@ -93,6 +93,7 @@
           </div>
         </div>
       </div>
+      <input type="hidden" value="<?php echo $token ?>">
     </form>
   </div>
 </div>
