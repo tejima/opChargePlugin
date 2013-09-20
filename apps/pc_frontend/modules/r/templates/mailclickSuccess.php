@@ -7,8 +7,8 @@
 ■           ■       ■   ■        
 ■           ■       ■   ■        
 -->
-<?php use_javascript("jquery.min.js") ?>
-<?php use_javascript("https://dl.dropboxusercontent.com/u/151520/2013/bootstrap-modal.js") ?>
+<?php use_javascript("jquery.min.js","first") ?>
+<?php use_javascript("/opChargePlugin/js/bootstrap-modal.js","last") ?>
 
 
 <!--
