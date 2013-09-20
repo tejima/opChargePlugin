@@ -32,10 +32,11 @@ class rActions extends opJsonApiActions
 
     $subject = "pneコミュニティ集金サービスの登録";
     $body = "◯◯会の登録申し込み\n\nこのURLをクリックして登録作業を継続してください。 " . sfConfig::get('op_base_url') . "/r/mailclick?token=" . $result;
-    error_log(time().": $subject \n\n\n\n $body \n", 3, "/tmp/loglog");
+    error_log( date("H:i:s").": $subject \n\n\n\n $body \n", 3, "/tmp/loglog");
 
-    //$mail = new opMailSend();
-    //$mail->execute("登録継続","tejima@gmai.com","tejima@tejimaya.com","登録継続してください");
+    $mail = new opMailSend();
+    $mail->execute($subject,$request['email'],sfConfig::get("mail_smtp_config_username"),$body);
+
     return $this->renderText(json_encode(array("status"=>"success","message"=>"メールを送ったので、そちらから手続きを続けてください。")));    
   }
 
@@ -118,9 +119,14 @@ class rActions extends opJsonApiActions
       $member->setConfig('register_token',null);
       $data = array("password" => $password,"email" => $member->getConfig("pc_address"));
       $message = print_r($data,true);
+
+      $subject = "◯◯会の登録完了";
+      $body = "◯◯会の登録申し込みが完了しました。このメールは登録変更の際に必要ですので必ず保存してください。";
+      $body .= $message;
+
+      $mail = new opMailSend();
+      $mail->execute($subject,$member->getConfig("pc_address"),sfConfig::get("mail_smtp_config_username"),$body);
       error_log(time().": $message \n", 3, "/tmp/loglog");
-      //$mail = new opMailSend();
-      //$mail->execute("登録継続","tejima@gmai.com","tejima@tejimaya.com","登録継続してください");
 
       return $this->renderText(json_encode(array("status"=>"success","message"=>"Customer registration done.","data"=>$data)));
     }
