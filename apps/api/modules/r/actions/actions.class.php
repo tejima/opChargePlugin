@@ -12,8 +12,11 @@ class rActions extends opJsonApiActions
 
   public function executeMail(sfWebRequest $request)
   {
-    $email = $request["email"];
-    $result = Doctrine::getTable('MemberConfig')->findOneByNameAndValue("pc_address",$email);
+    if (!isset($request['email']))
+    {
+      $this->forward400('email parameter not specified.');
+    }
+    $result = Doctrine::getTable('MemberConfig')->findOneByNameAndValue("pc_address", $request['email']);
     if($result){
       return $this->renderText(json_encode(array("status"=>"error","message"=> "メールアドレスはすでに登録されています。")));
     }
@@ -26,7 +29,10 @@ class rActions extends opJsonApiActions
 
     $member->generateRegisterToken();
     $result = $member->getRegisterToken();
-    error_log(time().": $result \n", 3, "/tmp/loglog");
+
+    $subject = "pneコミュニティ集金サービスの登録";
+    $body = "◯◯会の登録申し込み\n\nこのURLをクリックして登録作業を継続してください。 " . sfConfig::get('op_base_url') . "/r/mailclick?token=" . $result;
+    error_log(time().": $subject \n\n\n\n $body \n", 3, "/tmp/loglog");
 
     //$mail = new opMailSend();
     //$mail->execute("登録継続","tejima@gmai.com","tejima@tejimaya.com","登録継続してください");
@@ -107,9 +113,16 @@ class rActions extends opJsonApiActions
     }else{
       $member->setConfig('webpay_customer_id',$result['id']);
       $member->setIsActive(true);
+      $password = opToolkit::generatePasswordString();
+      $member->setConfig("password",md5($password));
       $member->setConfig('register_token',null);
+      $data = array("password" => $password,"email" => $member->getConfig("pc_address"));
+      $message = print_r($data,true);
+      error_log(time().": $message \n", 3, "/tmp/loglog");
+      //$mail = new opMailSend();
+      //$mail->execute("登録継続","tejima@gmai.com","tejima@tejimaya.com","登録継続してください");
 
-      return $this->renderText(json_encode(array("status"=>"success","message"=>"Customer registration done.")));
+      return $this->renderText(json_encode(array("status"=>"success","message"=>"Customer registration done.","data"=>$data)));
     }
   }
 }

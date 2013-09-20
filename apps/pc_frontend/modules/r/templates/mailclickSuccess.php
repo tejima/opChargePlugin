@@ -23,24 +23,26 @@
 <div id="MailAddressLogin" class="loginForm row">
   <div class="span7 offset1">
     <h1>クレジットカード情報を登録してください</h1>
-    <form class="form-horizontal">
+    <form class="form-horizontal" id="my-form">
+      <input type="hidden" name="token" value="<?php echo $token ?>">
+
       <div class="control-group">
         <label class="control-label" for="inputEmail">クレジットカード番号</label>
         <div class="controls">
-          <input type="text" class="span4" placeholder="0000000000000000" id="regist_email" />
+          <input type="text" class="span4" placeholder="0000000000000000" name="number" />
 
         </div>
       </div>
       <div class="control-group">
         <label class="control-label" for="inputPassword">アルファベット</label>
         <div class="controls">
-          <input type="text" class="span4" placeholder="TAROU YAMADA" id="regist_email" />
+          <input type="text" class="span4" placeholder="TAROU YAMADA" name="name" />
         </div>
       </div>
       <div class="control-group">
         <label class="control-label" for="inputPassword">有効期限(月/年)</label>
         <div class="controls">
-          <select class="span2">
+          <select name="month" class="span2">
             <option>01</option>
             <option>02</option>
             <option>03</option>
@@ -55,7 +57,7 @@
             <option>12</option>
           </select>
           /
-          <select class="span2">
+          <select name="year" class="span2">
             <option>2013</option>
             <option>2014</option>
             <option>2015</option>
@@ -73,7 +75,7 @@
       <div class="control-group">
         <label class="control-label" for="inputPassword">CVC</label>
         <div class="controls">
-          <input type="text" class="span2" placeholder="000" id="regist_email" />
+          <input type="text" class="span2" placeholder="000" name="cvc" />
           <a href="#myModal" data-toggle="modal">CVCとは？</a>
         </div>
       </div>
@@ -81,19 +83,19 @@
       <div class="control-group">
         <div class="controls">
           <label class="checkbox">
-            <input type="checkbox">利用規約に同意する</label>
+            <input type="checkbox" name="agree" value="true">利用規約に同意する</label>
         </div>
       </div>
+
       <div class="row">
         <div class="span6">
           <div class="control-group">
             <div class="controls">
-              <button id="submit_mailregist" class="btn btn-primary btn-large btn-block">次へすすむ</button>
+              <button id="submit_creditcard" class="btn btn-primary btn-large btn-block">次へすすむ</button>
             </div>
           </div>
         </div>
       </div>
-      <input type="hidden" value="<?php echo $token ?>">
     </form>
   </div>
 </div>
@@ -122,6 +124,21 @@
   </div>
 </div>
 
+<!-- Modal -->
+<div id="doneModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="doneModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="doneModalLabel">登録完了</h3>
+  </div>
+  <div class="modal-body">
+    <p>完了しました登録情報は、設定変更の際に必要になりますので必ずメモしてください。</p>
+    <span id="my-message"></span>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-large btn-block" data-dismiss="modal" aria-hidden="true">登録情報をメモしました。閉じる</button>
+  </div>
+</div>
+
 <!--
   ■ ■ ■       ■ ■ ■     ■ ■ ■ ■       ■ ■ ■     ■ ■ ■ ■     ■ ■ ■ ■ ■     ■ ■ ■ 
 ■       ■   ■       ■   ■       ■       ■       ■       ■       ■       ■       ■
@@ -134,22 +151,34 @@
 
 <script>
 $(document).ready(function(){
-  $("#submit_mailregist").click(function () {
-
+  $("#my-form").submit(function(event) {
+    event.preventDefault();
+    if(!$('#my-form [name=agree]:checked').val()){
+      alert("利用規約OKしてね");
+      return;
+    }
+    //name email month year cvc
     $.ajax({
-       type: "GET",
-       dataType: 'json',
-       url: "/api.php/r/mail.json",
-       data: {"email": $("#regist_email").val()},
-       success: function(msg){
-        if("success" == msg.status){
-          $('#myModal').modal('show');
-        }else{
-          alert(msg.message);
-
+        type: "GET",
+        dataType: 'json',
+        url: "/api.php/r/creditcard.json",
+        data: $("#my-form").serialize(),
+        success: function(msg){
+          if("success" == msg.status){
+            $('#my-message').val(msg.message);
+            $('#doneModal').modal('show');
+          }else{
+            alert("サーバと通信できず、登録が完了しませんでした。しばらくしてから登録しなおしてください。");
+          }
+        },
+        error: function(msg){
+          alert("しばらくしてから登録しなおしてください。");
         }
-      }
     });
   });
 });
+$('#doneModal').on('hidden', function () {
+   location.href = "/";
+})
 </script>
+
