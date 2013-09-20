@@ -2,7 +2,7 @@ r_mail:
   url: /r/mail.json
   param: { module: r, action: mail, sf_format: json }
   requirements: { sf_method: [post] }
-r_mail:
+r_creditcard:
   url: /r/creditcard.json
   param: { module: r, action: creditcard, sf_format: json }
   requirements: { sf_method: [post] }
