@@ -7,10 +7,11 @@
 ■           ■       ■   ■        
 ■           ■       ■   ■        
 -->
-<?php use_javascript("jquery.min.js") ?>
-<?php use_javascript("https://dl.dropboxusercontent.com/u/151520/2013/bootstrap-modal.js"); //FIXME ?>
-
-
+<?php use_javascript("jquery.min.js","first") ?>
+<?php use_javascript("/opChargePlugin/js/bootstrap-button.js","last") ?>
+<?php use_javascript("/opChargePlugin/js/bootstrap-modal.js","last") ?>
+<?php use_javascript("/opChargePlugin/js/jquery.validate.js","last") ?>
+<?php use_javascript("/opChargePlugin/js/messages_ja.js","last") ?>
 
 <!--
 ■       ■   ■ ■ ■ ■ ■   ■       ■   ■       
@@ -25,22 +26,22 @@
   <h1>
     登録するメールアドレスを入力してください。
   </h1>
+  <form id="mailform">
   <table>
     <tr>
       <td>
-        <input type="text" class="span7" placeholder="メールアドレス" id="regist_email" />
+        <input type="email" class="span7" name="regist_email" placeholder="メールアドレス" id="regist_email" required/>
       </td>
     </tr>
     <tr>
       <td>
-        <button id="submit_mailregist" class="btn btn-primary btn-large pull-right">次へすすむ</button>
+        <input type="submit" id="submit_mailregist" type="button" data-loading-text="通信中..." class="btn btn-primary btn-large pull-right" value="次へすすむ">
       </td>
     </tr>
-  </table>
+  </table> 
+  </form>
 </div>
 
-
- 
 
 <!--
 ■ ■ ■ ■ ■   ■ ■ ■ ■ ■   ■       ■   ■ ■ ■ ■     ■               ■ ■ ■   ■ ■ ■ ■ ■   ■ ■ ■ ■ ■     ■ ■ ■ 
@@ -79,8 +80,37 @@
 -->
 
 <script>
+
+jQuery.validator.setDefaults({
+  debug: true,
+  success: "valid"
+});
+
+
+$("#mailform").validate(
+{
+  rules: {
+    regist_email: {
+      required: true,
+      email: true
+    }
+  }
+}
+);
+
+function reset_default(){
+  $("#submit_mailregist").button("reset");
+  $("#regist_email").val("");
+}
+
 $(document).ready(function(){
-  $("#submit_mailregist").click(function () {
+  $("#mailform").submit(function (event) {
+    event.preventDefault();
+    if(!$(this).valid()){
+      return;
+    }
+
+    $("#submit_mailregist").button("loading");
 
     $.ajax({
        type: "GET",
@@ -92,19 +122,16 @@ $(document).ready(function(){
           $('#myModal').modal('show');
         }else{
           alert(msg.message);
-
+          reset_default();
         }
       }
     });
   });
 });
+
+
+$('#myModal').on('hidden', function () {
+  reset_default();
+})
+
 </script>
-
-
-
-
-
-
-
-
-

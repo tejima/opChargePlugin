@@ -110,7 +110,7 @@ class rActions extends opJsonApiActions
     ));
     if(!$result){
       $this->forward400('invalid card. try again.');
-      //FIXME forward to admin with server error info.
+      //FIXME forward to admin with server error info. クレジットカードの認証失敗は特別なエラーコードを返す。
     }else{
       $member->setConfig('webpay_customer_id',$result['id']);
       $member->setIsActive(true);

@@ -8,7 +8,11 @@
 ■           ■       ■   ■        
 -->
 <?php use_javascript("jquery.min.js","first") ?>
+<?php use_javascript("/opChargePlugin/js/bootstrap-button.js","last") ?>
 <?php use_javascript("/opChargePlugin/js/bootstrap-modal.js","last") ?>
+<?php use_javascript("/opChargePlugin/js/jquery.validate.js","last") ?>
+<?php use_javascript("/opChargePlugin/js/messages_ja.js","last") ?>
+
 
 
 <!--
@@ -27,10 +31,9 @@
       <input type="hidden" name="token" value="<?php echo $token ?>">
 
       <div class="control-group">
-        <label class="control-label" for="inputEmail">クレジットカード番号</label>
+        <label class="control-label" for="number">クレジットカード番号</label>
         <div class="controls">
           <input type="text" class="span4" placeholder="0000000000000000" name="number" />
-
         </div>
       </div>
       <div class="control-group">
@@ -73,17 +76,25 @@
       </div>
 
       <div class="control-group">
-        <label class="control-label" for="inputPassword">CVC</label>
+        <label class="control-label" for="cvc">CVC</label>
         <div class="controls">
-          <input type="text" class="span2" placeholder="000" name="cvc" />
-          <a href="#myModal" data-toggle="modal">CVCとは？</a>
+          <div class="row">
+            <div class="span4">
+              <input type="text" class="span4" placeholder="000" name="cvc" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="span4">
+              <a href="#myModal" data-toggle="modal">CVCとは？</a>
+            </div>
+          </div>
         </div>
       </div>
 
       <div class="control-group">
+        <label class="control-label" for="agree">利用規約に同意する</label>
         <div class="controls">
-          <label class="checkbox">
-            <input type="checkbox" name="agree" value="true">利用規約に同意する</label>
+          <input type="checkbox" name="agree" value="true">
         </div>
       </div>
 
@@ -150,13 +161,40 @@
 -->
 
 <script>
+//FIXME
+jQuery.validator.setDefaults({
+  debug: true,
+  success: "valid"
+});
+
+$( "#my-form" ).validate({
+  rules: {
+    number: {
+      required: true,
+      creditcard: true
+    },
+    name: {
+      required: true
+    },
+    cvc: {
+      required: true,
+      digits: true
+    }
+
+  }
+});
+
 $(document).ready(function(){
   $("#my-form").submit(function(event) {
     event.preventDefault();
+    if(!$( "#my-form" ).valid()){
+      return;
+    }
     if(!$('#my-form [name=agree]:checked').val()){
       alert("利用規約OKしてね");
       return;
     }
+
     //name email month year cvc
     $.ajax({
         type: "GET",
@@ -172,6 +210,7 @@ $(document).ready(function(){
           }
         },
         error: function(msg){
+          //FIXME カード認証エラーは特別な対応を
           alert("しばらくしてから登録しなおしてください。");
         }
     });
