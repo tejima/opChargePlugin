@@ -4,8 +4,8 @@
  */
 (function ($) {
 	$.extend($.validator.messages, {
-		required: "このフィールドは必須です。",
-		remote: "このフィールドを修正してください。",
+		required: "この項目は必須です。",
+		remote: "この項目を修正してください。",
 		email: "有効なEメールアドレスを入力してください。",
 		url: "有効なURLを入力してください。",
 		date: "有効な日付を入力してください。",
