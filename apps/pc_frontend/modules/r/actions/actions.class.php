@@ -28,4 +28,8 @@ class rActions extends sfActions
     }
     $this->token = $request["token"];
   }
+  public function executeMail(sfWebRequest $request)
+  {
+  }
+
 }

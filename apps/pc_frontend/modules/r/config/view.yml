@@ -1,0 +1,2 @@
+default:
+  javascripts: [jquery.min.js,/opChargePlugin/js/bootstrap-button.js,/opChargePlugin/js/bootstrap-modal.js,/opChargePlugin/js/jquery.validate.js,/opChargePlugin/js/messages_ja.js]

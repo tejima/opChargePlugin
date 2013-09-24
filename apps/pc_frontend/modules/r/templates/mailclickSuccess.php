@@ -7,12 +7,6 @@
 ■           ■       ■   ■        
 ■           ■       ■   ■        
 -->
-<?php use_javascript("jquery.min.js","first") ?>
-<?php use_javascript("/opChargePlugin/js/bootstrap-button.js","last") ?>
-<?php use_javascript("/opChargePlugin/js/bootstrap-modal.js","last") ?>
-<?php use_javascript("/opChargePlugin/js/jquery.validate.js","last") ?>
-<?php use_javascript("/opChargePlugin/js/messages_ja.js","last") ?>
-
 
 
 <!--
