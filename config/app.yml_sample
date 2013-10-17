@@ -1,2 +1,3 @@
 all:
   opchargeplugin_webpaysecret: SECRET_SECRET
+  opchargeplugin_amount: 2000
