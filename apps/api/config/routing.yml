@@ -1,12 +1,12 @@
-r_invite:
-  url: /r/invite.json
-  param: { module: r, action: invite, sf_format: json }
+charge_invite:
+  url: /charge/invite.json
+  param: { module: charge, action: invite, sf_format: json }
   requirements: { sf_method: [post] }
-r_mail:
-  url: /r/mail.json
-  param: { module: r, action: mail, sf_format: json }
+charge_mail:
+  url: /charge/mail.json
+  param: { module: charge, action: mail, sf_format: json }
   requirements: { sf_method: [post] }
-r_creditcard:
-  url: /r/creditcard.json
-  param: { module: r, action: creditcard, sf_format: json }
+charge_creditcard:
+  url: /charge/creditcard.json
+  param: { module: charge, action: creditcard, sf_format: json }
   requirements: { sf_method: [post] }

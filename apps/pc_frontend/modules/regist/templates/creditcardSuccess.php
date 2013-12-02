@@ -83,6 +83,16 @@
         </div>
       </div>
 
+
+      <div class="control-group">
+        <label class="control-label" for="email">メールアドレス</label>
+        <div class="controls">
+          <input type="text" class="span4" placeholder="xxxx@xxxx.com" name="email" />
+        </div>
+      </div>
+
+
+
 <?php if($regist_mode): ?>
       <div class="control-group">
         <label class="control-label" for="agree">利用規約に同意する</label>
@@ -175,11 +185,14 @@ $( "#my-form" ).validate({
     name: {
       required: true
     },
+    email: {
+      required: true,
+      email: true
+    },
     cvc: {
       required: true,
       digits: true
     }
-
   }
 });
 
@@ -196,12 +209,11 @@ $(document).ready(function(){
     }
 <?php endif; ?>
 
-
     //name email month year cvc
     $.ajax({
         type: "GET",
         dataType: 'json',
-        url: "/api.php/r/creditcard.json",
+        url: "/api.php/charge/creditcard.json",
         data: $("#my-form").serialize(),
         success: function(msg){
           if("success" == msg.status){

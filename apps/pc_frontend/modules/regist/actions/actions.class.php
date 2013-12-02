@@ -17,7 +17,7 @@ class registActions extends sfActions
   public function executeCreditcard(sfWebRequest $request)
   {
   }
-  public function executeMailclick(sfWebRequest $request)
+  public function executeMailVerify(sfWebRequest $request)
   {
     if (!isset($request['token']))
     {
@@ -29,9 +29,12 @@ class registActions extends sfActions
       $this->message = "invalid token.";
       return sfView::ERROR;
     }
-    $this->token = $request["token"];
-  }
-  public function executeMail(sfWebRequest $request)
-  {
+    if($member->is_active){
+      $this->message = "user exists."
+      return sfView::ERROR;    
+    }
+    //1.トークンの確認 メンバーの復元
+    //2.クレジットカードの登録処理
+
   }
 }
